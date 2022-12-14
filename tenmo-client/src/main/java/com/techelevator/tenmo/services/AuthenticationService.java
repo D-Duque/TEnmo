@@ -19,6 +19,12 @@ public class AuthenticationService
         this.baseUrl = url;
     }
 
+    protected static String authToken = null;
+    public static void setAuthToken(String authToken)
+    {
+        AuthenticationService.authToken = authToken;
+    }
+
     public AuthenticatedUser login(UserCredentials credentials)
     {
         HttpEntity<UserCredentials> entity = createCredentialsEntity(credentials);
@@ -58,4 +64,5 @@ public class AuthenticationService
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(credentials, headers);
     }
+
 }

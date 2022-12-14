@@ -5,6 +5,8 @@ import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.views.UserOutput;
 
+import java.util.Currency;
+
 public class TenmoApp
 {
 
@@ -66,8 +68,9 @@ public class TenmoApp
     {
         UserCredentials credentials = userOutput.promptForCredentials();
         currentUser = authenticationService.login(credentials);
-        if (currentUser == null)
-        {
+        if (currentUser != null) {
+            AuthenticationService.setAuthToken(currentUser.getToken());
+        } else {
             userOutput.printErrorMessage();
         }
     }
