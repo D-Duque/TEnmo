@@ -13,6 +13,7 @@ public class AuthenticationService
 
     private final String baseUrl;
     private final RestTemplate restTemplate = new RestTemplate();
+    protected static String authToken = null;
 
     public AuthenticationService(String url)
     {
@@ -57,5 +58,10 @@ public class AuthenticationService
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(credentials, headers);
+    }
+
+    public static void setAuthToken(String authToken)
+    {
+        AuthenticationService.authToken = authToken;
     }
 }

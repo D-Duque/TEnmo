@@ -65,8 +65,14 @@ public class TenmoApp
     private void handleLogin()
     {
         UserCredentials credentials = userOutput.promptForCredentials();
-        currentUser = authenticationService.login(credentials);
-        if (currentUser == null)
+       currentUser = authenticationService.login(credentials);
+
+        if (currentUser != null)
+        {
+            AuthenticationService.setAuthToken(currentUser.getToken());
+
+        }
+        else
         {
             userOutput.printErrorMessage();
         }
