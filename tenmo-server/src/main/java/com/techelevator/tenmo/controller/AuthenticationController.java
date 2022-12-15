@@ -60,5 +60,9 @@ public class AuthenticationController
         }
     }
 
+
+    // TODO: create GetMapping for user by ID
+
+
 }
 

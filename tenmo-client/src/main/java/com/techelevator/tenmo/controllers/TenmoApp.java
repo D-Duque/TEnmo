@@ -1,10 +1,15 @@
 package com.techelevator.tenmo.controllers;
 
+import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
+import com.techelevator.tenmo.views.BalancePage;
 import com.techelevator.tenmo.views.UserOutput;
+import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 
 public class TenmoApp
@@ -14,6 +19,8 @@ public class TenmoApp
 
     private final UserOutput userOutput = new UserOutput();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private final AccountService accountService = new AccountService(API_BASE_URL);
+    private final RestTemplate restTemplate = new RestTemplate();
 
     private AuthenticatedUser currentUser;
 
@@ -114,10 +121,14 @@ public class TenmoApp
         }
     }
 
+
     private void viewCurrentBalance()
     {
         // TODO Auto-generated method stub
-
+       BigDecimal balance = accountService.getAccountBalance();
+       // print balance
+        BalancePage balancePage = new BalancePage();
+        balancePage.displayBalance(balance);
     }
 
     private void viewTransferHistory()

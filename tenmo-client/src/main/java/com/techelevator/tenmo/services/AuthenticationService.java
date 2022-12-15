@@ -8,17 +8,19 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-public class AuthenticationService
+
+public class AuthenticationService<T>
 {
 
     private final String baseUrl;
     private final RestTemplate restTemplate = new RestTemplate();
-    protected static String authToken = null;
 
     public AuthenticationService(String url)
     {
         this.baseUrl = url;
     }
+
+
 
     protected static String authToken = null;
     public static void setAuthToken(String authToken)
@@ -64,6 +66,27 @@ public class AuthenticationService
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(credentials, headers);
+    }
+
+    protected HttpEntity<T> makeAuthEntity(T body)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        if(authToken != null)
+        {
+            headers.setBearerAuth(authToken);
+        }
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(body, headers);
+    }
+
+    protected HttpEntity<Void> makeAuthEntity()
+    {
+        HttpHeaders headers = new HttpHeaders();
+        if(authToken != null)
+        {
+            headers.setBearerAuth(authToken);
+        }
+        return new HttpEntity<>(headers);
     }
 
 }

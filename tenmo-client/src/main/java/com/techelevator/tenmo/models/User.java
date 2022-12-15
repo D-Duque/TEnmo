@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.models;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class User
@@ -7,6 +8,7 @@ public class User
 
     private int id;
     private String username;
+    private BigDecimal balance;
 
     public int getId()
     {
@@ -26,6 +28,16 @@ public class User
     public void setUsername(String username)
     {
         this.username = username;
+    }
+
+    public BigDecimal getBalance()
+    {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance)
+    {
+        this.balance = balance;
     }
 
     @Override
