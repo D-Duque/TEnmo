@@ -2,15 +2,19 @@ package com.techelevator.tenmo.controllers;
 
 import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
+import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.BalancePage;
+import com.techelevator.tenmo.views.SendPage;
 import com.techelevator.tenmo.views.UserOutput;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 
 public class TenmoApp
 {
@@ -20,6 +24,7 @@ public class TenmoApp
     private final UserOutput userOutput = new UserOutput();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService(API_BASE_URL);
+    private final UserService userService = new UserService(API_BASE_URL);
     private final RestTemplate restTemplate = new RestTemplate();
 
     private AuthenticatedUser currentUser;
@@ -140,13 +145,15 @@ public class TenmoApp
     private void viewPendingRequests()
     {
         // TODO Auto-generated method stub
-
     }
 
     private void sendBucks()
     {
-        // TODO Auto-generated method stub
-
+        // list all available uses for transfer
+        List<User> avalableUsers = userService.getAllAvailableUsers();
+        SendPage sendPage = new SendPage();
+        sendPage.displayAvailableUsers(avalableUsers);
+        //
     }
 
     private void requestBucks()

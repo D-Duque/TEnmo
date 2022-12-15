@@ -9,6 +9,8 @@ public interface UserDao
 
     List<User> findAll();
 
+    List<User> findAllExceptCurrentUser(String username);
+
     User getUserById(int id);
 
     User findByUsername(String username);
@@ -16,4 +18,6 @@ public interface UserDao
     int findIdByUsername(String username);
 
     boolean create(String username, String password);
+
+
 }
