@@ -52,15 +52,24 @@ public class JdbcAccountDao implements AccountDao
         }
     }
 
-    //TODO: findBalanceByID
+    //TODO: update account balances
+    @Override
+    public void updateAccount(Account updatedAccount)
+    {
+        int accountId = updatedAccount.getAccountId();
+        int userId = updatedAccount.getUserId();
+        BigDecimal balance = updatedAccount.getBalance();
+
+        String sqlUpdate = "UPDATE account SET account_id = ? "
+                    + " , user_id = ? "
+                    + " , balance = ? "
+                    + " WHERE user_id = ?;";
+
+        jdbcTemplate.update(sqlUpdate, accountId, userId, balance, userId);
+    }
 
     private Account mapRowToAccount(SqlRowSet rs)
     {
-//        Account account = new Account();
-//        account.setAccountId(rs.getInt("account_id"));
-//        account.setUserId(rs.getInt("user_id"));
-//        account.setBalance(rs.getBigDecimal("balance"));
-//        return account;
 
         var accountId = rs.getInt("account_id");
         var userId = rs.getInt("user_id");

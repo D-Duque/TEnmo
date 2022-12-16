@@ -1,9 +1,6 @@
 package com.techelevator.tenmo.controllers;
 
-import com.techelevator.tenmo.models.Account;
-import com.techelevator.tenmo.models.AuthenticatedUser;
-import com.techelevator.tenmo.models.User;
-import com.techelevator.tenmo.models.UserCredentials;
+import com.techelevator.tenmo.models.*;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.TransferService;
@@ -154,68 +151,81 @@ public class TenmoApp
 
     private void sendBucks()
     {
-        // list all available uses for transfer
+        // list all available users for transfer
         List<User> availableUsers = userService.getAllAvailableUsers();
         SendPage sendPage = new SendPage();
         sendPage.displayAvailableUsers(availableUsers);
         // Request ID & amount
+
         int selectedId = userOutput.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
         boolean hasEnoughMoney = selectedAmount.compareTo(accountService.getAccountBalance()) < 0;
         boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
 
+
         // verify selectedAmount < currentBalance
         if (!hasEnoughMoney)
         {
-
             System.out.println("You don't have enough funds to make this transfer.");
             sendBucks();
         }
         else if (!isMoreThanZero)
         {
             System.out.println("You need to enter an amount greater than 0 to transfer.");
+            sendBucks();
         }
         else
         {
-            // decrease current account balance by selectedAmount
-            if (selectedId != currentUser.getUser().getId() )
-            {
-                currentAccount = accountService.getAccount(currentUser.getUser().getId());
-                Account accountTo = accountService.getAccount(selectedId);
-                BigDecimal currentBalance = currentAccount.getBalance();
-                BigDecimal updatedBalance = currentBalance.subtract(selectedAmount);
+            // create transfer object
+            Transfer newTransfer = new Transfer(){{
+                setAccountFrom(currentUser.getUser().getId());
+                setAccountTo(selectedId);
+                setAmount(selectedAmount);
+            }};
 
-                // create new account to update old user account with new balance
-                var updatedFromAccount = new Account()
-                {{
-                    setAccountId(currentAccount.getAccountId());
-                    setUserId((currentAccount.getUserId()));
-                    setBalance(updatedBalance);
-                }};
-
-
-                accountService.updateBalance(updatedFromAccount);
-
-                // increase selectedId account balance by selectedAmount
-                BigDecimal currentToBalance = accountTo.getBalance();
-                BigDecimal updatedToBalance = currentToBalance.add(selectedAmount);
-                var updatedToAccount = new Account()
-                {{
-                    setAccountId(accountTo.getAccountId());
-                    setUserId(accountTo.getUserId());
-                    setBalance(updatedToBalance);
-                }};
-
-                accountService.updateBalance(updatedToAccount);
-
-                //TODO:  create Transfer object
-            }
-            else
-            {
-                System.out.println("You cannot make transfers with yourself. Enter a different accountId");
-            }
-
+            transferService.updateBalances(newTransfer);
         }
+//        else
+//        {
+//            // decrease current account balance by selectedAmount
+//            if (selectedId != currentUser.getUser().getId() )
+//            {
+//                currentAccount = accountService.getAccount(currentUser.getUser().getId());
+//                Account accountTo = accountService.getAccount(selectedId);
+//                BigDecimal currentBalance = currentAccount.getBalance();
+//                BigDecimal updatedBalance = currentBalance.subtract(selectedAmount);
+//
+//                // create new account to update old user account with new balance
+//                var updatedFromAccount = new Account()
+//                {{
+//                    setAccountId(currentAccount.getAccountId());
+//                    setUserId((currentAccount.getUserId()));
+//                    setBalance(updatedBalance);
+//                }};
+//
+//
+//                accountService.updateBalance(updatedFromAccount);
+//
+//                // increase selectedId account balance by selectedAmount
+//                BigDecimal currentToBalance = accountTo.getBalance();
+//                BigDecimal updatedToBalance = currentToBalance.add(selectedAmount);
+//                var updatedToAccount = new Account()
+//                {{
+//                    setAccountId(accountTo.getAccountId());
+//                    setUserId(accountTo.getUserId());
+//                    setBalance(updatedToBalance);
+//                }};
+//
+//                accountService.updateBalance(updatedToAccount);
+//
+//                //TODO:  create Transfer object
+//            }
+//            else
+//            {
+//                System.out.println("You cannot make transfers with yourself. Enter a different accountId");
+//            }
+
+
     }
 
     private void requestBucks()
