@@ -7,6 +7,7 @@ import java.util.List;
 
 public class SendPage extends BasePage
 {
+
     public void displayAvailableUsers(List<User> users)
     {
         for (User user: users) {
@@ -14,4 +15,6 @@ public class SendPage extends BasePage
             printCyan(user.getId() + "          " + user.getUsername() + "\n");
         }
     }
+
+
 }

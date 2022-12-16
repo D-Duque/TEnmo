@@ -6,6 +6,7 @@ import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
+import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.BalancePage;
 import com.techelevator.tenmo.views.SendPage;
@@ -25,9 +26,11 @@ public class TenmoApp
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService(API_BASE_URL);
     private final UserService userService = new UserService(API_BASE_URL);
+    private final TransferService transferService = new TransferService(API_BASE_URL);
     private final RestTemplate restTemplate = new RestTemplate();
 
     private AuthenticatedUser currentUser;
+    private Account currentAccount;
 
     public void run()
     {
@@ -130,7 +133,9 @@ public class TenmoApp
     private void viewCurrentBalance()
     {
         // TODO Auto-generated method stub
+        currentAccount = accountService.getAccount(currentUser.getUser().getId());
        BigDecimal balance = accountService.getAccountBalance();
+       currentAccount.setBalance(balance);
        // print balance
         BalancePage balancePage = new BalancePage();
         balancePage.displayBalance(balance);
@@ -150,10 +155,67 @@ public class TenmoApp
     private void sendBucks()
     {
         // list all available uses for transfer
-        List<User> avalableUsers = userService.getAllAvailableUsers();
+        List<User> availableUsers = userService.getAllAvailableUsers();
         SendPage sendPage = new SendPage();
-        sendPage.displayAvailableUsers(avalableUsers);
-        //
+        sendPage.displayAvailableUsers(availableUsers);
+        // Request ID & amount
+        int selectedId = userOutput.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
+        BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
+        boolean hasEnoughMoney = selectedAmount.compareTo(accountService.getAccountBalance()) < 0;
+        boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
+
+        // verify selectedAmount < currentBalance
+        if (!hasEnoughMoney)
+        {
+
+            System.out.println("You don't have enough funds to make this transfer.");
+            sendBucks();
+        }
+        else if (!isMoreThanZero)
+        {
+            System.out.println("You need to enter an amount greater than 0 to transfer.");
+        }
+        else
+        {
+            // decrease current account balance by selectedAmount
+            if (selectedId != currentUser.getUser().getId() )
+            {
+                currentAccount = accountService.getAccount(currentUser.getUser().getId());
+                Account accountTo = accountService.getAccount(selectedId);
+                BigDecimal currentBalance = currentAccount.getBalance();
+                BigDecimal updatedBalance = currentBalance.subtract(selectedAmount);
+
+                // create new account to update old user account with new balance
+                var updatedFromAccount = new Account()
+                {{
+                    setAccountId(currentAccount.getAccountId());
+                    setUserId((currentAccount.getUserId()));
+                    setBalance(updatedBalance);
+                }};
+
+
+                accountService.updateBalance(updatedFromAccount);
+
+                // increase selectedId account balance by selectedAmount
+                BigDecimal currentToBalance = accountTo.getBalance();
+                BigDecimal updatedToBalance = currentToBalance.add(selectedAmount);
+                var updatedToAccount = new Account()
+                {{
+                    setAccountId(accountTo.getAccountId());
+                    setUserId(accountTo.getUserId());
+                    setBalance(updatedToBalance);
+                }};
+
+                accountService.updateBalance(updatedToAccount);
+
+                //TODO:  create Transfer object
+            }
+            else
+            {
+                System.out.println("You cannot make transfers with yourself. Enter a different accountId");
+            }
+
+        }
     }
 
     private void requestBucks()

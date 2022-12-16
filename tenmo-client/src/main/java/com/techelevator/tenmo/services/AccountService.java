@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.util.BasicLogger;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import com.techelevator.tenmo.models.Account;
 import java.math.BigDecimal;
@@ -16,6 +18,22 @@ public class AccountService extends AuthenticationService<Account>
     public AccountService(String url)
     {
         super(url);
+    }
+
+    public Account getAccount(int accountId)
+    {
+        try
+        {
+            var url = API_BASE_URL;
+            var entity = makeAuthEntity();
+            ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, entity, Account.class);
+            return response.getBody();
+        }
+        catch (Exception ex)
+        {
+            BasicLogger.log(ex.getMessage());
+            return null;
+        }
     }
 
 
@@ -34,6 +52,26 @@ public class AccountService extends AuthenticationService<Account>
             BasicLogger.log(ex.getMessage());
             return null;
         }
+    }
+
+    public boolean updateBalance(Account updatedAccount) {
+        HttpEntity<Account> entity = createAccountEntity(updatedAccount);
+
+        boolean success = false;
+        try {
+            restTemplate.put(API_BASE_URL + updatedAccount.getUserId(), entity);
+            success = true;
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return success;
+    }
+
+    private HttpEntity<Account> createAccountEntity(Account account)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(account, headers);
     }
 
 }
