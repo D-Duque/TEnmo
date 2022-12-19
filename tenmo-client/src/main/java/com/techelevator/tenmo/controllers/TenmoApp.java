@@ -11,7 +11,6 @@ import com.techelevator.tenmo.views.UserOutput;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.List;
 
 public class TenmoApp
@@ -24,7 +23,6 @@ public class TenmoApp
     private final AccountService accountService = new AccountService(API_BASE_URL);
     private final UserService userService = new UserService(API_BASE_URL);
     private final TransferService transferService = new TransferService(API_BASE_URL);
-    private final RestTemplate restTemplate = new RestTemplate();
 
     private AuthenticatedUser currentUser;
     private Account currentAccount;

@@ -30,7 +30,7 @@ public class TransferService extends AuthenticationService<Transfer>
         boolean success = false;
         try
         {
-            restTemplate.exchange(API_BASE_URL, HttpMethod.PUT, entity, void.class);
+            restTemplate.exchange(API_BASE_URL, HttpMethod.PUT, entity, Transfer.class);
             success = true;
         }
         catch (RestClientResponseException | ResourceAccessException e)

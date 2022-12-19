@@ -33,23 +33,19 @@ public class JdbcTransferDao implements TransferDao
     public boolean addTransfer(Transfer transfer)
     {
         Integer transferId;
-        int transferTypeId;
-        int transferStatusId;
-        int accountFrom = transfer.getAccountFrom();
-        int accountTo = transfer.getAccountTo();
+        int userFrom = transfer.getAccountFrom();
+        int userTo = transfer.getAccountTo();
         BigDecimal amount = transfer.getAmount();
 
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
                 "VALUES ((SELECT transfer_type_id FROM transfer_type WHERE transfer_type_desc = 'Send'),\n" +
                 "        (SELECT transfer_status_id FROM transfer_status WHERE transfer_status_desc = 'Approved'),\n" +
-                "        ?,?,?) RETURNING transfer_id;";
+                "        (SELECT account_id FROM account WHERE user_id = ?), " +
+                "(SELECT account_id FROM account WHERE user_id = ?), " +
+                "?) RETURNING transfer_id;";
 
-        transferId = jdbcTemplate.queryForObject(sql, Integer.class, accountFrom, accountTo, amount);
+        transferId = jdbcTemplate.queryForObject(sql, Integer.class, userFrom, userTo, amount);
 
-        if (transferId == null) {
-            return false;
-        }
-
-        return true;
+        return transferId != null;
     }
 }
