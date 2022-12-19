@@ -10,11 +10,13 @@ public class SendPage extends BasePage
 
     public void displayAvailableUsers(List<User> users)
     {
-        for (User user: users) {
-            printLine("User ID" + "          " + "Name");
+        printLine("User ID" + "          " + "Name");
+        for (User user : users)
+        {
             printCyan(user.getId() + "          " + user.getUsername() + "\n");
         }
     }
-
-
 }
+
+
+

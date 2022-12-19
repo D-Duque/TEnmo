@@ -6,6 +6,7 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.BalancePage;
+import com.techelevator.tenmo.views.HistoryPage;
 import com.techelevator.tenmo.views.SendPage;
 import com.techelevator.tenmo.views.UserOutput;
 import org.springframework.web.client.RestTemplate;
@@ -139,7 +140,10 @@ public class TenmoApp
     private void viewTransferHistory()
     {
         // TODO Auto-generated method stub
+        List<Transfer> transfers = transferService.getTransferHistory();
 
+        HistoryPage historyPage = new HistoryPage();
+        historyPage.displayTransferHistory(currentUser.getUser(), transfers);
     }
 
     private void viewPendingRequests()

@@ -2,15 +2,16 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
+import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.util.BasicLogger;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TransferService extends AuthenticationService<Transfer>
 {
@@ -47,5 +48,20 @@ public class TransferService extends AuthenticationService<Transfer>
         return new HttpEntity<>(transfer, headers);
     }
 
-
+    // retrieve transfer history
+    public List<Transfer> getTransferHistory() {
+        List<Transfer> transfers = null;
+        try {
+            var url = API_BASE_URL + "history";
+            var entity = makeAuthEntity();
+            // return transfer list
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Transfer[].class);
+            transfers = Arrays.asList(response.getBody());
+        }
+        catch (Exception ex)
+        {
+            BasicLogger.log(ex.getMessage());
+        }
+        return transfers;
+    }
 }

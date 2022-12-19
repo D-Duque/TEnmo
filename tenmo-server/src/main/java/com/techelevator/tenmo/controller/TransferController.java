@@ -2,13 +2,16 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/transfer")
@@ -17,11 +20,13 @@ public class TransferController
 {
     private final TransferDao transferDao;
     private final AccountDao accountDao;
+    private final UserDao userDao;
 
-    public TransferController(TransferDao transferDao, AccountDao accountDao)
+    public TransferController(TransferDao transferDao, AccountDao accountDao, UserDao userDao)
     {
         this.transferDao = transferDao;
         this.accountDao = accountDao;
+        this.userDao = userDao;
     }
 
     @PutMapping(value = "")
@@ -57,4 +62,14 @@ public class TransferController
     public void addTransfer(Transfer transfer) {
          transferDao.addTransfer(transfer);
     }
+
+    // get transfer list
+    @GetMapping(value = "/history")
+    public List<Transfer> getTransfers(Principal principal) {
+        List<Transfer> transfers = new ArrayList<>();
+        int userId = userDao.findByUsername(principal.getName()).getId();
+        transfers = transferDao.findAll(userId);
+        return transfers;
+    }
+
 }
