@@ -159,7 +159,7 @@ public class TenmoApp
 
         int selectedId = userOutput.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
-        boolean hasEnoughMoney = selectedAmount.compareTo(accountService.getAccountBalance()) < 0;
+        boolean hasEnoughMoney = selectedAmount.compareTo(accountService.getAccountBalance()) <= 0;
         boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
 
 
@@ -185,38 +185,6 @@ public class TenmoApp
 
             transferService.updateBalances(newTransfer);
         }
-//        else
-//        {
-//            // decrease current account balance by selectedAmount
-//            if (selectedId != currentUser.getUser().getId() )
-//            {
-//                currentAccount = accountService.getAccount(currentUser.getUser().getId());
-//                Account accountTo = accountService.getAccount(selectedId);
-//                BigDecimal currentBalance = currentAccount.getBalance();
-//                BigDecimal updatedBalance = currentBalance.subtract(selectedAmount);
-//
-//                // create new account to update old user account with new balance
-//                var updatedFromAccount = new Account()
-//                {{
-//                    setAccountId(currentAccount.getAccountId());
-//                    setUserId((currentAccount.getUserId()));
-//                    setBalance(updatedBalance);
-//                }};
-//
-//
-//                accountService.updateBalance(updatedFromAccount);
-//
-//                // increase selectedId account balance by selectedAmount
-//                BigDecimal currentToBalance = accountTo.getBalance();
-//                BigDecimal updatedToBalance = currentToBalance.add(selectedAmount);
-//                var updatedToAccount = new Account()
-//                {{
-//                    setAccountId(accountTo.getAccountId());
-//                    setUserId(accountTo.getUserId());
-//                    setBalance(updatedToBalance);
-//                }};
-//
-//                accountService.updateBalance(updatedToAccount);
 //
 //                //TODO:  create Transfer object
 //            }

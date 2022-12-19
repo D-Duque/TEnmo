@@ -9,4 +9,6 @@ public interface TransferDao
     List<Transfer> findAll();
 
     Transfer getTransferById(int transferId);
+
+    boolean addTransfer(Transfer transfer);
 }

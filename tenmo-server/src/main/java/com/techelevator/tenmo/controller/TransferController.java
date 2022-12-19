@@ -49,7 +49,12 @@ public class TransferController
         accountDao.updateAccount(fromAccount);
         accountDao.updateAccount(toAccount);
 
-        // update transfer table
+        // add transfer to transfer table
+        addTransfer(transfer);
+    }
 
+    // update transfer table
+    public void addTransfer(Transfer transfer) {
+         transferDao.addTransfer(transfer);
     }
 }
