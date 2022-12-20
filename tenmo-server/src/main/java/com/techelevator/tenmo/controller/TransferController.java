@@ -57,6 +57,7 @@ public class TransferController
         // add transfer to transfer table
         addTransfer(transfer);
     }
+    
 
     // update transfer table
     public void addTransfer(Transfer transfer) {
@@ -69,7 +70,6 @@ public class TransferController
         List<Transfer> transfers = new ArrayList<>();
         int userId = userDao.findByUsername(principal.getName()).getId();
         int accountId = accountDao.getAccountById(userId).getAccountId();
-
 
         transfers = transferDao.findAll(accountId);
         for (Transfer transfer : transfers)
@@ -98,8 +98,13 @@ public class TransferController
         String toUsername = userDao.getUserById(toUserId).getUsername();
         transfer.setFromUsername(fromUsername);
         transfer.setToUserName(toUsername);
+        return transfer;
+    }
 
-       return transfer;
+    public void createRequest(@RequestBody Transfer transfer) {
+        transfer.setTransferTypeId(1);
+        transfer.setTransferStatusId(1);
+        addTransfer(transfer);
     }
 
 }

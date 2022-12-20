@@ -6,7 +6,6 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -157,24 +156,15 @@ public class TenmoApp
     }
 
 
-    private void viewPendingRequests()
-    {
-        // TODO Auto-generated method stub
-    }
-
     private void sendBucks()
     {
         // list all available users for transfer
-        List<User> availableUsers = userService.getAllAvailableUsers();
-        SendPage sendPage = new SendPage();
-        sendPage.displayAvailableUsers(availableUsers);
+        displayUserList();
         // Request ID & amount
-
         int selectedId = userOutput.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
         boolean hasEnoughMoney = selectedAmount.compareTo(accountService.getAccountBalance()) <= 0;
         boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
-
 
         // verify selectedAmount < currentBalance
         if (!hasEnoughMoney)
@@ -198,21 +188,44 @@ public class TenmoApp
 
             transferService.updateBalances(newTransfer);
         }
-//
-//                //TODO:  create Transfer object
-//            }
-//            else
-//            {
-//                System.out.println("You cannot make transfers with yourself. Enter a different accountId");
-//            }
-
-
     }
 
     private void requestBucks()
     {
-        // TODO Auto-generated method stub
+        displayUserList();
+        // Request ID & amount
+        int selectedId = userOutput.promptForInt("Enter ID of user you are requesting bucks from (0 to cancel): ");
+        BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
 
+        boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
+
+        // verify selectedAmount < currentBalance
+        if (!isMoreThanZero)
+        {
+            System.out.println("You need to enter an amount greater than 0 to transfer.");
+            requestBucks();
+        } else
+        {
+            // create transfer object
+            Transfer newTransfer = new Transfer()
+            {{
+                setAccountFrom(currentUser.getUser().getId());
+                setAccountTo(selectedId);
+                setAmount(selectedAmount);
+            }};
+        }
+    }
+
+    private void displayUserList() {
+        List<User> availableUsers = userService.getAllAvailableUsers();
+        SendRequestPage sendRequestPage = new SendRequestPage();
+        sendRequestPage.displayAvailableUsers(availableUsers);
+    }
+
+
+    private void viewPendingRequests()
+    {
+        // TODO Auto-generated method stub
     }
 
 }

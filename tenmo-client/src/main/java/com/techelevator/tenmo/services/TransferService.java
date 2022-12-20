@@ -82,4 +82,20 @@ public class TransferService extends AuthenticationService<Transfer>
         }
     }
 
+    // create request
+    public boolean createRequest(Transfer transfer) {
+        HttpEntity<Transfer> entity = makeAuthEntity(transfer);
+        boolean success = false;
+        try
+        {
+            restTemplate.exchange(API_BASE_URL, HttpMethod.POST, entity, Transfer.class);
+            success = true;
+        }
+        catch (RestClientResponseException | ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+        }
+        return success;
+    }
+
 }

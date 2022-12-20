@@ -2,10 +2,9 @@ package com.techelevator.tenmo.views;
 
 import com.techelevator.tenmo.models.User;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-public class SendPage extends BasePage
+public class SendRequestPage extends BasePage
 {
 
     public void displayAvailableUsers(List<User> users)

@@ -119,7 +119,6 @@ public class JdbcTransferDao implements TransferDao
             setAmount(amount);
             setUsername(username);
         }};
-
         return transfer;
     }
 }
