@@ -37,6 +37,8 @@ public class AccountService extends AuthenticationService<Account>
     }
 
 
+
+
     public BigDecimal getAccountBalance()
     {
         try
@@ -52,19 +54,6 @@ public class AccountService extends AuthenticationService<Account>
             BasicLogger.log(ex.getMessage());
             return null;
         }
-    }
-
-    public boolean updateBalance(Account updatedAccount) {
-        HttpEntity<Account> entity = createAccountEntity(updatedAccount);
-
-        boolean success = false;
-        try {
-            restTemplate.put(API_BASE_URL + updatedAccount.getUserId(), entity);
-            success = true;
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-        }
-        return success;
     }
 
     private HttpEntity<Account> createAccountEntity(Account account)

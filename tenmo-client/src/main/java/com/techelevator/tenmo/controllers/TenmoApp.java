@@ -129,9 +129,8 @@ public class TenmoApp
     private void viewCurrentBalance()
     {
         // TODO Auto-generated method stub
-        currentAccount = accountService.getAccount(currentUser.getUser().getId());
+
        BigDecimal balance = accountService.getAccountBalance();
-       currentAccount.setBalance(balance);
        // print balance
         BalancePage balancePage = new BalancePage();
         balancePage.displayBalance(balance);
@@ -141,9 +140,9 @@ public class TenmoApp
     {
         // TODO Auto-generated method stub
         List<Transfer> transfers = transferService.getTransferHistory();
-
+        currentAccount = accountService.getAccount(currentUser.getUser().getId());
         HistoryPage historyPage = new HistoryPage();
-        historyPage.displayTransferHistory(currentUser.getUser(), transfers);
+        historyPage.displayTransferHistory(currentAccount, transfers, currentUser.getUser());
     }
 
     private void viewPendingRequests()

@@ -68,8 +68,37 @@ public class TransferController
     public List<Transfer> getTransfers(Principal principal) {
         List<Transfer> transfers = new ArrayList<>();
         int userId = userDao.findByUsername(principal.getName()).getId();
-        transfers = transferDao.findAll(userId);
+        int accountId = accountDao.getAccountById(userId).getAccountId();
+
+
+        transfers = transferDao.findAll(accountId);
+        for (Transfer transfer : transfers)
+        {
+            Integer fromAccount = transfer.getAccountFrom();
+            Integer toAccount = transfer.getAccountTo();
+            Integer fromUserId = accountDao.getAccountbyAccountId(fromAccount).getUserId();
+            Integer toUserId = accountDao.getAccountbyAccountId(toAccount).getUserId();
+            String fromUsername = userDao.getUserById(fromUserId).getUsername();
+            String toUsername = userDao.getUserById(toUserId).getUsername();
+            transfer.setFromUsername(fromUsername);
+            transfer.setToUserName(toUsername);
+        }
         return transfers;
+    }
+    @GetMapping(value = "/{transferId}")
+    public Transfer getTransferDetail(@PathVariable int transferId)
+    {   
+        Transfer transfer = transferDao.getTransferById(transferId);
+        Integer fromAccount = transfer.getAccountFrom();
+        Integer toAccount = transfer.getAccountTo();
+        Integer fromUserId = accountDao.getAccountbyAccountId(fromAccount).getUserId();
+        Integer toUserId = accountDao.getAccountbyAccountId(toAccount).getUserId();
+        String fromUsername = userDao.getUserById(fromUserId).getUsername();
+        String toUsername = userDao.getUserById(toUserId).getUsername();
+        transfer.setFromUsername(fromUsername);
+        transfer.setToUserName(toUsername);
+
+       return transfer;
     }
 
 }
