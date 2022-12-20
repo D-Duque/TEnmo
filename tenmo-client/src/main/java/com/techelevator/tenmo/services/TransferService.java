@@ -103,7 +103,7 @@ public class TransferService extends AuthenticationService<Transfer>
         HttpEntity<Transfer> entity = makeAuthEntity(transfer);
         boolean success = false;
         try
-        {   String url = API_BASE_URL + "request" + transfer.getTransferId();
+        {   String url = API_BASE_URL + "request/" + transfer.getTransferId();
             restTemplate.exchange(url, HttpMethod.PUT, entity, Transfer.class);
             success = true;
         }

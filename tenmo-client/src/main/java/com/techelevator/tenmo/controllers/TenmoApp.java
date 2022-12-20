@@ -216,8 +216,8 @@ public class TenmoApp
             // create transfer object
             Transfer newTransfer = new Transfer()
             {{
-                setAccountFrom(currentUser.getUser().getId());
-                setAccountTo(selectedId);
+                setAccountFrom(selectedId);
+                setAccountTo(currentUser.getUser().getId());
                 setAmount(selectedAmount);
             }};
             transferService.createRequest(newTransfer);
@@ -232,32 +232,54 @@ public class TenmoApp
 
     private void viewPendingRequests()
     {
+        final int VIEW_REQUEST = 1;
+        final int EXIT_REQUEST = 0;
         List<Transfer> transfers = transferService.getTransferHistory();
         currentAccount = accountService.getAccount(currentUser.getUser().getId());
         PendingRequestPage pendingRequestPage = new PendingRequestPage();
         pendingRequestPage.displayPendingRequest(currentAccount, transfers, currentUser.getUser());
+        int menuSelection = userOutput.promptForMenuSelection("Please choose an option: ");
 
-        int transferId = userOutput.promptForInt("Enter transfer Id: ");
-        userOutput.printRequestMenu();
-        int menuSelection = -1;
-        menuSelection = userOutput.promptForInt("Please choose an option: ");
-        //retrieve the transfer object based on user choice of Id
-        Transfer request = transferService.getTransferDetail(transferId);
-
-        //option1: to approve
-        if (menuSelection == 1) {
-            request.setTransferStatusId(ST_APPROVED);
-            //to update DAO
-            transferService.updateRequest(request);
-
-        } else if (menuSelection == 2)
+        // Approve/Reject Transfer
+        if (menuSelection == VIEW_REQUEST)
         {
-            request.setTransferStatusId(ST_REJECT);
-            //to update DAO
-            transferService.updateRequest(request);
-        } else {
-            userOutput.printMainMenu();
+            final int APPROVE = 1;
+            final int REJECT = 2;
+            //retrieve the transfer object based on user choice of Id
+            int transferId = userOutput.promptForInt("Enter transfer Id: ");
+            Transfer request = transferService.getTransferDetail(transferId);
+            userOutput.printRequestMenu();
+            menuSelection = userOutput.promptForInt("Please choose an option: ");
+
+            //option1: to approve
+            if (menuSelection == APPROVE) {
+
+                request.setTransferStatusId(ST_APPROVED);
+                //to update DAO
+                transferService.updateRequest(request);
+
+            } else if (menuSelection == REJECT)
+            {
+                request.setTransferStatusId(ST_REJECT);
+                //to update DAO
+                transferService.updateRequest(request);
+            } else {
+                mainMenu();
+            }
         }
+        else if (menuSelection == EXIT_REQUEST)
+        {
+            mainMenu();
+        }
+        else
+        {
+            System.out.println("Not a valid menu option.");
+        }
+
+
+
+
+
     }
 }
 

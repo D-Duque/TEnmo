@@ -28,7 +28,7 @@ public class JdbcTransferDao implements TransferDao
         List<Transfer> transfers = new ArrayList<>();
 //        String sql = "SELECT * FROM transfer WHERE account_from = (SELECT account_id FROM account WHERE user_id = ?)    \n" +
 //                "OR account_to = (SELECT account_id FROM account WHERE user_id = ?);";
-        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount, a.account_id, a.user_id, username\n" +
+        String sql = "SELECT DISTINCT ON (transfer_id) transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount, a.account_id, a.user_id, username\n" +
                 "FROM transfer as t\n" +
                 "JOIN account as a\n" +
                 "ON t.account_from = a.account_id \n" +
@@ -36,6 +36,7 @@ public class JdbcTransferDao implements TransferDao
                 "JOIN tenmo_user as tu\n" +
                 "ON a.user_id = tu.user_id\n" +
                 "WHERE t.account_from = ? OR t.account_to = ?; ";
+
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
         while (result.next())
         {
@@ -82,7 +83,7 @@ public class JdbcTransferDao implements TransferDao
     }
 
     @Override
-    public boolean addTransfer(Transfer transfer)
+    public Integer addTransfer(Transfer transfer)
     {
         Integer transferId;
         int userFrom = transfer.getAccountFrom();
@@ -100,8 +101,34 @@ public class JdbcTransferDao implements TransferDao
 
         transferId = jdbcTemplate.queryForObject(sql, Integer.class, typeId, statusId, userFrom, userTo, amount);
 
-        return transferId != null;
+        if (transferId != null)
+        { return transferId;}
+
+        return null;
     }
+
+    @Override
+    public void updateTransfer(Transfer transfer)
+    {
+        Integer transferId = transfer.getTransferId();
+        int typeId = transfer.getTransferTypeId();
+        int statusId = transfer.getTransferStatusId();
+        int accountFrom = transfer.getAccountFrom();
+        int accountTo = transfer.getAccountTo();
+        BigDecimal amount = transfer.getAmount();
+
+
+        String sql = "UPDATE transfer SET transfer_id = ? " +
+                " , transfer_type_id = ? " +
+                " , transfer_status_id = ? " +
+                " , account_from = ? " +
+                " , account_to = ? " +
+                " , amount = ? "  +
+                " WHERE transfer_id = ?;";
+
+        jdbcTemplate.update(sql, transferId, typeId, statusId, accountFrom, accountTo, amount, transferId);
+    }
+
 
     private Transfer mapRowToTransfer(SqlRowSet rs)
     {

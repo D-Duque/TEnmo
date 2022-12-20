@@ -22,16 +22,27 @@ public class HistoryPage extends BasePage
                 transfer.setTransferType("Send");
             }
 
-            if (!transfer.getUsername().equalsIgnoreCase(currentUser.getUsername()))
+            if (transfer.getTransferType().equalsIgnoreCase("Send"))
             {
                 if (transfer.getAccountFrom() != account.getAccountId())
                 {
-                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    From:" + transfer.getUsername() + "                    " + transfer.getAmount() + "\n");
+                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    From:" + transfer.getFromUsername() + "                    " + transfer.getAmount() + "\n");
                 } else if (transfer.getAccountTo() != account.getAccountId())
                 {
-                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    To:" + transfer.getUsername() + "                    " + transfer.getAmount() + "\n");
+                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    To:" + transfer.getToUserName() + "                    " + transfer.getAmount() + "\n");
                 }
             }
+            else
+            {
+                if (transfer.getAccountFrom() != account.getAccountId())
+                {
+                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    To:" + transfer.getFromUsername() + "                    " + transfer.getAmount() + "\n");
+                } else if (transfer.getAccountTo() != account.getAccountId())
+                {
+                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    From:" + transfer.getToUserName() + "                    " + transfer.getAmount() + "\n");
+                }
+            }
+
         }
     }
 }

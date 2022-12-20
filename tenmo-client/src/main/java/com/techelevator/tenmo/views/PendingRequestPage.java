@@ -14,11 +14,15 @@ public class PendingRequestPage extends BasePage
         printCyan("Transfer ID" + "         " +  "Transfers To"  + "         " + "Amount($)" + "\n");
         printCyan("------------------------------------------------------------------------" + "\n");
         for (Transfer transfer: transfers) {
-            boolean isNotCurrentUser = transfer.getUsername().equalsIgnoreCase(currentUser.getUsername());
+            boolean isCurrentUser = transfer.getToUserName().equalsIgnoreCase(currentUser.getUsername());
             boolean isARequest = transfer.getTransferTypeId() == 1;
-            if (!isNotCurrentUser && isARequest) {
-                printCyan(transfer.getTransferId() + "         " + transfer.getUsername() + "         " + transfer.getAmount() + "\n");
+            boolean isPending = transfer.getTransferStatusId() == 1;
+            if (!isCurrentUser && isARequest && isPending) {
+                printCyan(transfer.getTransferId() + "         " + transfer.getToUserName() + "         " + transfer.getAmount() + "\n");
             }
         }
+        printCyanLine("------------------------------------------------------------------------");
+        printCyanLine("1. Select Request");
+        printCyanLine("0. Exit.");
     }
 }

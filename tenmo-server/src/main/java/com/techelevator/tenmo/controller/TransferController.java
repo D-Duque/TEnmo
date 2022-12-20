@@ -36,39 +36,41 @@ public class TransferController
     }
 
     @PutMapping(value = "")
-    public void updateBalances(@RequestBody Transfer transfer)
+    public void createSend(@RequestBody Transfer transfer)
     {
-        // get transfer object data
-        int accountFrom = transfer.getAccountFrom();
-        int accountTo = transfer.getAccountTo();
-        BigDecimal amount = transfer.getAmount();
+        // add transfer to transfer table
+        transfer = addTransfer(transfer, ST_APPROVED, TP_SEND);
 
-        // get current account info
-        Account fromAccount = accountDao.getAccountById(accountFrom);
-        Account toAccount = accountDao.getAccountById(accountTo);
+        updateBalances(transfer);
+    }
 
-        BigDecimal fromBalance = fromAccount.getBalance();
-        BigDecimal toBalance = toAccount.getBalance();
+    public void updateBalances(Transfer transfer)
+    {
+        // get current account IDs
+        Account fromAccount = accountDao.getAccountbyAccountId(transfer.getAccountFrom());
+        Account toAccount = accountDao.getAccountbyAccountId(transfer.getAccountTo());
+        BigDecimal oldFromBalance = fromAccount.getBalance();
+        BigDecimal oldToBalance = toAccount.getBalance();
+        BigDecimal updatedAmount = transfer.getAmount();
 
-        BigDecimal updatedFromBalance = fromBalance.subtract(amount);
-        BigDecimal updatedToBalance = toBalance.add(amount);
+        // calculate new balances
+        BigDecimal newFromBalance = oldFromBalance.subtract(updatedAmount);
+        BigDecimal newToBalance = oldToBalance.add(updatedAmount);
+        fromAccount.setBalance(newFromBalance);
+        toAccount.setBalance(newToBalance);
 
-        fromAccount.setBalance(updatedFromBalance);
-        toAccount.setBalance(updatedToBalance);
-
-        // update balances in database
+        // update account database
         accountDao.updateAccount(fromAccount);
         accountDao.updateAccount(toAccount);
-
-        // add transfer to transfer table
-        addTransfer(transfer, ST_APPROVED, TP_SEND);
     }
 
     // update transfer table
-    public void addTransfer(Transfer transfer, int typeId, int statusId) {
+    public Transfer addTransfer(Transfer transfer, int typeId, int statusId) {
         transfer.setTransferTypeId(typeId);
         transfer.setTransferStatusId(statusId);
-        transferDao.addTransfer(transfer);
+        Integer transferId = transferDao.addTransfer(transfer);
+        transfer = transferDao.getTransferById(transferId);
+        return transfer;
     }
 
     // get transfer list
@@ -115,12 +117,18 @@ public class TransferController
 
     @PutMapping(value = "/request/{transferId}")
     public void updateRequest(@RequestBody Transfer transfer, @PathVariable int transferId) {
+
+//        Account fromAccount = accountDao.getAccountById(transfer.getAccountFrom());
+//        Account toAccount = accountDao.getAccountById(transfer.getAccountTo());
+//        transfer.setAccountFrom(fromAccount.getAccountId());
+//        transfer.setAccountTo(toAccount.getAccountId());
+
         if (transfer.getTransferStatusId() == ST_APPROVED) {
             //update balances & DAO
+            updateBalances(transfer);
 
-        } else if (transfer.getTransferStatusId() == ST_REJECT) {
-            // update DAO
         }
+        transferDao.updateTransfer(transfer);
     }
 
 }
