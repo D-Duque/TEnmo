@@ -62,6 +62,15 @@ public class UserOutput
         System.out.println();
     }
 
+    public void printRequestMenu()
+    {
+        System.out.println();
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject");
+        System.out.println("--------------------------");
+        System.out.println();
+    }
     public UserCredentials promptForCredentials()
     {
         String username = promptForString("Username: ");

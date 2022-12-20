@@ -11,7 +11,7 @@ public class TransferDetailPage extends BasePage
     public void displayTransferDetail(Transfer transfer)
     {
         printCyan("------------------------------------------------------------" + "\n");
-        printCyan("Details");
+        printCyan("Transfer Details");
         printCyan("------------------------------------------------------------" + "\n");
         printCyan("Id: " + transfer.getTransferId() + "\n");
         printCyan("From: " + transfer.getFromUsername() + "\n");

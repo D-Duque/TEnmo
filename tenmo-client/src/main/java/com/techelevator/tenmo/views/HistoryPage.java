@@ -12,16 +12,24 @@ public class HistoryPage extends BasePage
 {
     public void displayTransferHistory(Account account, List<Transfer> transfers, User currentUser)
     {
-        printLine("Transfer ID" + "         " + "From/To" + "         " + "Amount");
+        printLine("Transfer ID" + "         " +  "Request type" + "                    " + "From/To" + "                    " + "Amount");
         for (Transfer transfer: transfers) {
+            if (transfer.getTransferTypeId() == 1)
+            {
+                transfer.setTransferType("Request");
+            } else
+            {
+                transfer.setTransferType("Send");
+            }
+
             if (!transfer.getUsername().equalsIgnoreCase(currentUser.getUsername()))
             {
                 if (transfer.getAccountFrom() != account.getAccountId())
                 {
-                    printCyan(transfer.getTransferId() + "          From:" + transfer.getUsername() + "          " + transfer.getAmount() + "\n");
+                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    From:" + transfer.getUsername() + "                    " + transfer.getAmount() + "\n");
                 } else if (transfer.getAccountTo() != account.getAccountId())
                 {
-                    printCyan(transfer.getTransferId() + "            To:" + transfer.getUsername() + "          " + transfer.getAmount() + "\n");
+                    printCyan(transfer.getTransferId() + "                    " + transfer.getTransferType() + "                    To:" + transfer.getUsername() + "                    " + transfer.getAmount() + "\n");
                 }
             }
         }

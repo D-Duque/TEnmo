@@ -6,6 +6,7 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.*;
+import io.cucumber.core.backend.Pending;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -213,6 +214,7 @@ public class TenmoApp
                 setAccountTo(selectedId);
                 setAmount(selectedAmount);
             }};
+            transferService.createRequest(newTransfer);
         }
     }
 
@@ -222,10 +224,23 @@ public class TenmoApp
         sendRequestPage.displayAvailableUsers(availableUsers);
     }
 
-
     private void viewPendingRequests()
     {
-        // TODO Auto-generated method stub
-    }
+        List<Transfer> transfers = transferService.getTransferHistory();
+        currentAccount = accountService.getAccount(currentUser.getUser().getId());
+        PendingRequestPage pendingRequestPage = new PendingRequestPage();
+        pendingRequestPage.displayPendingRequest(currentAccount, transfers, currentUser.getUser());
 
+        int transferId = userOutput.promptForInt("Enter transfer Id: ");
+        userOutput.printRequestMenu();
+        int menuSelection = -1;
+        menuSelection = userOutput.promptForInt("Please choose an option: ");
+
+        //option1: to approve
+
+        //option2: reject
+
+        //option3: not approve or reject
+    }
 }
+
