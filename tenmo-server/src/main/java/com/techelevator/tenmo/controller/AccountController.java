@@ -51,5 +51,4 @@ public class AccountController
 
         return accountDao.getAccountById(userId).getBalance();
     }
-
 }

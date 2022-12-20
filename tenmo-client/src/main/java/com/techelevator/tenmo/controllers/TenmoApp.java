@@ -5,10 +5,7 @@ import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.UserService;
-import com.techelevator.tenmo.views.BalancePage;
-import com.techelevator.tenmo.views.HistoryPage;
-import com.techelevator.tenmo.views.SendPage;
-import com.techelevator.tenmo.views.UserOutput;
+import com.techelevator.tenmo.views.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -100,6 +97,7 @@ public class TenmoApp
             else if (menuSelection == 2)
             {
                 viewTransferHistory();
+
             }
             else if (menuSelection == 3)
             {
@@ -129,8 +127,7 @@ public class TenmoApp
     private void viewCurrentBalance()
     {
         // TODO Auto-generated method stub
-
-       BigDecimal balance = accountService.getAccountBalance();
+        BigDecimal balance = accountService.getAccountBalance();
        // print balance
         BalancePage balancePage = new BalancePage();
         balancePage.displayBalance(balance);
@@ -143,7 +140,22 @@ public class TenmoApp
         currentAccount = accountService.getAccount(currentUser.getUser().getId());
         HistoryPage historyPage = new HistoryPage();
         historyPage.displayTransferHistory(currentAccount, transfers, currentUser.getUser());
+        // prompt user for transfer menu option
+        userOutput.printTransferMenu();
+        int menuSelection = -1;
+        menuSelection = userOutput.promptForInt("Please choose an option: ");
+        if (menuSelection == 1) {
+            int transferId = userOutput.promptForInt("Enter transfer Id: ");
+            viewTransferById(transferId);
+        }
     }
+
+    private void viewTransferById(int transferId) {
+        Transfer transfer = transferService.getTransferDetail(transferId);
+        TransferDetailPage detailPage = new TransferDetailPage();
+        detailPage.displayTransferDetail(transfer);
+    }
+
 
     private void viewPendingRequests()
     {

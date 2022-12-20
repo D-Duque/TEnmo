@@ -20,8 +20,6 @@ public class AuthenticationService<T>
         this.baseUrl = url;
     }
 
-
-
     protected static String authToken = null;
     public static void setAuthToken(String authToken)
     {

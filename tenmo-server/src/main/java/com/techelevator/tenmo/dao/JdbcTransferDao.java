@@ -103,21 +103,6 @@ public class JdbcTransferDao implements TransferDao
 
     private Transfer mapRowToTransfer(SqlRowSet rs)
     {
-//        var transferId = rs.getInt("transfer_id");
-//        var transferTypeId = rs.getInt("transfer_type_id");
-//        var transferStatusId = rs.getInt("transfer_status_id");
-//        var accountFrom = rs.getInt("account_from");
-//        var accountTo = rs.getInt("account_to");
-//        var amount = rs.getBigDecimal("amount");
-//        var transfer = new Transfer(){{
-//            setTransferId(transferId);
-//            setTransferTypeId(transferTypeId);
-//            setTransferStatusId(transferStatusId);
-//            setAccountFrom(accountFrom);
-//            setAccountTo(accountTo);
-//            setAmount(amount);
-//        }};
-
         var transferId = rs.getInt("transfer_id");
         var transferTypeId = rs.getInt("transfer_type_id");
         var transferStatusId = rs.getInt("transfer_status_id");

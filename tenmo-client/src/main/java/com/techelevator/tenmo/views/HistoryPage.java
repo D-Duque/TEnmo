@@ -26,6 +26,4 @@ public class HistoryPage extends BasePage
             }
         }
     }
-
-    // Option to view transfer detail by #
 }

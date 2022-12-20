@@ -64,4 +64,22 @@ public class TransferService extends AuthenticationService<Transfer>
         }
         return transfers;
     }
+
+    // retrieve transfer details by transfer id
+    public Transfer getTransferDetail(int transferId)
+    {
+        try
+        {
+            var url = API_BASE_URL + transferId;
+            var entity = makeAuthEntity();
+            ResponseEntity<Transfer> response = restTemplate.exchange(url, HttpMethod.GET, entity, Transfer.class);
+            return response.getBody();
+        }
+        catch (Exception ex)
+        {
+            BasicLogger.log(ex.getMessage());
+            return null;
+        }
+    }
+
 }
