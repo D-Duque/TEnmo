@@ -87,8 +87,8 @@ public class TransferService extends AuthenticationService<Transfer>
         HttpEntity<Transfer> entity = makeAuthEntity(transfer);
         boolean success = false;
         try
-        {
-            restTemplate.exchange(API_BASE_URL, HttpMethod.POST, entity, Transfer.class);
+        {   String url = API_BASE_URL + "request";
+            restTemplate.exchange(url, HttpMethod.POST, entity, Transfer.class);
             success = true;
         }
         catch (RestClientResponseException | ResourceAccessException e)

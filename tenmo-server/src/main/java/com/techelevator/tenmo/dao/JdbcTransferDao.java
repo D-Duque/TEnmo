@@ -88,15 +88,17 @@ public class JdbcTransferDao implements TransferDao
         int userFrom = transfer.getAccountFrom();
         int userTo = transfer.getAccountTo();
         BigDecimal amount = transfer.getAmount();
+        int typeId = transfer.getTransferTypeId();
+        int statusId = transfer.getTransferStatusId();
 
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
-                "VALUES ((SELECT transfer_type_id FROM transfer_type WHERE transfer_type_desc = 'Send'),\n" +
-                "        (SELECT transfer_status_id FROM transfer_status WHERE transfer_status_desc = 'Approved'),\n" +
+                "VALUES (?,\n" +
+                "        ?,\n" +
                 "        (SELECT account_id FROM account WHERE user_id = ?), " +
                 "(SELECT account_id FROM account WHERE user_id = ?), " +
                 "?) RETURNING transfer_id;";
 
-        transferId = jdbcTemplate.queryForObject(sql, Integer.class, userFrom, userTo, amount);
+        transferId = jdbcTemplate.queryForObject(sql, Integer.class, typeId, statusId, userFrom, userTo, amount);
 
         return transferId != null;
     }

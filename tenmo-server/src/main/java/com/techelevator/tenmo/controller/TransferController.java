@@ -8,6 +8,7 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ public class TransferController
     private final TransferDao transferDao;
     private final AccountDao accountDao;
     private final UserDao userDao;
+    final int ST_PENDING = 1;
+    final int ST_APPROVED = 2;
+    final int ST_REJECT = 3;
+    final int TP_REQUEST = 1;
+    final int TP_SEND = 2;
 
     public TransferController(TransferDao transferDao, AccountDao accountDao, UserDao userDao)
     {
@@ -55,13 +61,14 @@ public class TransferController
         accountDao.updateAccount(toAccount);
 
         // add transfer to transfer table
-        addTransfer(transfer);
+        addTransfer(transfer, ST_APPROVED, TP_SEND);
     }
-    
 
     // update transfer table
-    public void addTransfer(Transfer transfer) {
-         transferDao.addTransfer(transfer);
+    public void addTransfer(Transfer transfer, int typeId, int statusId) {
+        transfer.setTransferTypeId(typeId);
+        transfer.setTransferStatusId(statusId);
+        transferDao.addTransfer(transfer);
     }
 
     // get transfer list
@@ -101,10 +108,9 @@ public class TransferController
         return transfer;
     }
 
+    @PostMapping(value = "/request")
     public void createRequest(@RequestBody Transfer transfer) {
-        transfer.setTransferTypeId(1);
-        transfer.setTransferStatusId(1);
-        addTransfer(transfer);
+        addTransfer(transfer, ST_PENDING, TP_REQUEST);
     }
 
 }
