@@ -113,4 +113,14 @@ public class TransferController
         addTransfer(transfer, ST_PENDING, TP_REQUEST);
     }
 
+    @PutMapping(value = "/request/{transferId}")
+    public void updateRequest(@RequestBody Transfer transfer, @PathVariable int transferId) {
+        if (transfer.getTransferStatusId() == ST_APPROVED) {
+            //update balances & DAO
+
+        } else if (transfer.getTransferStatusId() == ST_REJECT) {
+            // update DAO
+        }
+    }
+
 }

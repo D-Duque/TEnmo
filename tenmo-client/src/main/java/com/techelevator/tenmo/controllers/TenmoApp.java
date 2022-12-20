@@ -22,6 +22,12 @@ public class TenmoApp
     private final UserService userService = new UserService(API_BASE_URL);
     private final TransferService transferService = new TransferService(API_BASE_URL);
 
+    final int ST_PENDING = 1;
+    final int ST_APPROVED = 2;
+    final int ST_REJECT = 3;
+    final int TP_REQUEST = 1;
+    final int TP_SEND = 2;
+
     private AuthenticatedUser currentUser;
     private Account currentAccount;
 
@@ -235,12 +241,23 @@ public class TenmoApp
         userOutput.printRequestMenu();
         int menuSelection = -1;
         menuSelection = userOutput.promptForInt("Please choose an option: ");
+        //retrieve the transfer object based on user choice of Id
+        Transfer request = transferService.getTransferDetail(transferId);
 
         //option1: to approve
+        if (menuSelection == 1) {
+            request.setTransferStatusId(ST_APPROVED);
+            //to update DAO
+            transferService.updateRequest(request);
 
-        //option2: reject
-
-        //option3: not approve or reject
+        } else if (menuSelection == 2)
+        {
+            request.setTransferStatusId(ST_REJECT);
+            //to update DAO
+            transferService.updateRequest(request);
+        } else {
+            userOutput.printMainMenu();
+        }
     }
 }
 

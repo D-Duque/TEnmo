@@ -98,4 +98,19 @@ public class TransferService extends AuthenticationService<Transfer>
         return success;
     }
 
+    //to update transfer table once request transfer is approved
+    public boolean updateRequest(Transfer transfer) {
+        HttpEntity<Transfer> entity = makeAuthEntity(transfer);
+        boolean success = false;
+        try
+        {   String url = API_BASE_URL + "request" + transfer.getTransferId();
+            restTemplate.exchange(url, HttpMethod.PUT, entity, Transfer.class);
+            success = true;
+        }
+        catch (RestClientResponseException | ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+        }
+        return success;
+    }
 }
