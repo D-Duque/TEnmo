@@ -1,6 +1,8 @@
 package com.techelevator.dao;
 
+import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.JdbcUserDao;
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.User;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests {
@@ -112,3 +115,4 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         Assert.assertEquals(newUser, actualUser);
     }
 }
+

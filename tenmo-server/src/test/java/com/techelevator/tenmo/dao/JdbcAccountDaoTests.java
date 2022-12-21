@@ -1,7 +1,8 @@
-package com.techelevator.dao;
+package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.dao.JdbcAccountDao;
+import com.techelevator.dao.BaseDaoTests;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,4 +47,8 @@ public class JdbcAccountDaoTests extends BaseDaoTests
         // assert
         Assert.assertEquals("Because get account by account id should retrieve the associated account.", expected, actual);
     }
+
+
+
+
 }

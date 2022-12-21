@@ -91,11 +91,15 @@ public class JdbcAccountDao implements AccountDao
         var accountId = rs.getInt("account_id");
         var userId = rs.getInt("user_id");
         var balance = rs.getBigDecimal("balance");
-        var account = new Account(){{
-            setAccountId(accountId);
-            setUserId(userId);
-            setBalance(balance);
-        }};
+//        Account account = new Account(){{
+//            setAccountId(accountId);
+//            setUserId(userId);
+//            setBalance(balance);
+//        }};
+        Account account = new Account();
+        account.setAccountId(accountId);
+        account.setUserId(userId);
+        account.setBalance(balance);
 
         return account;
     }
