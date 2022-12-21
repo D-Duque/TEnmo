@@ -8,7 +8,6 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -47,8 +46,8 @@ public class TransferController
     public void updateBalances(Transfer transfer)
     {
         // get current account IDs
-        Account fromAccount = accountDao.getAccountbyAccountId(transfer.getAccountFrom());
-        Account toAccount = accountDao.getAccountbyAccountId(transfer.getAccountTo());
+        Account fromAccount = accountDao.getAccountByAccountId(transfer.getAccountFrom());
+        Account toAccount = accountDao.getAccountByAccountId(transfer.getAccountTo());
         BigDecimal oldFromBalance = fromAccount.getBalance();
         BigDecimal oldToBalance = toAccount.getBalance();
         BigDecimal updatedAmount = transfer.getAmount();
@@ -85,8 +84,8 @@ public class TransferController
         {
             Integer fromAccount = transfer.getAccountFrom();
             Integer toAccount = transfer.getAccountTo();
-            Integer fromUserId = accountDao.getAccountbyAccountId(fromAccount).getUserId();
-            Integer toUserId = accountDao.getAccountbyAccountId(toAccount).getUserId();
+            Integer fromUserId = accountDao.getAccountByAccountId(fromAccount).getUserId();
+            Integer toUserId = accountDao.getAccountByAccountId(toAccount).getUserId();
             String fromUsername = userDao.getUserById(fromUserId).getUsername();
             String toUsername = userDao.getUserById(toUserId).getUsername();
             transfer.setFromUsername(fromUsername);
@@ -101,8 +100,8 @@ public class TransferController
         Transfer transfer = transferDao.getTransferById(transferId);
         Integer fromAccount = transfer.getAccountFrom();
         Integer toAccount = transfer.getAccountTo();
-        Integer fromUserId = accountDao.getAccountbyAccountId(fromAccount).getUserId();
-        Integer toUserId = accountDao.getAccountbyAccountId(toAccount).getUserId();
+        Integer fromUserId = accountDao.getAccountByAccountId(fromAccount).getUserId();
+        Integer toUserId = accountDao.getAccountByAccountId(toAccount).getUserId();
         String fromUsername = userDao.getUserById(fromUserId).getUsername();
         String toUsername = userDao.getUserById(toUserId).getUsername();
         transfer.setFromUsername(fromUsername);

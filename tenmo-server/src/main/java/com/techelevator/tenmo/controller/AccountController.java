@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -26,6 +27,13 @@ public class AccountController
         this.accountDao = accountDao;
         this.userDao = userDao;
     }
+
+    @GetMapping("/all")
+    public List<Account> getAllAccounts()
+    {
+        return accountDao.findAll();
+    }
+
 
     @GetMapping(value = "")
     public Account findCurrentAccount(Principal principal)

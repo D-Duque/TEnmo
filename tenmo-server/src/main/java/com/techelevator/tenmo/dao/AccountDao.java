@@ -1,9 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface AccountDao
@@ -12,7 +10,7 @@ public interface AccountDao
 
     Account getAccountById(int userId);
 
-    Account getAccountbyAccountId(int accountId);
+    Account getAccountByAccountId(int accountId);
 
     void updateAccount(Account updatedAccount);
 
