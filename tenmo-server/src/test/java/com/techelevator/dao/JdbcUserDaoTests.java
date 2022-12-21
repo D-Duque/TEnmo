@@ -61,7 +61,6 @@ public class JdbcUserDaoTests extends BaseDaoTests {
     @Test
     public void getUserById_given_invalid_user_id_returns_null() {
         User actualUser = sut.getUserById(-1);
-
         Assert.assertNull(actualUser);
     }
 
