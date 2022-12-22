@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.List;
 
@@ -34,13 +33,11 @@ public class AccountController
         return accountDao.findAll();
     }
 
-
     @GetMapping(value = "")
     public Account findCurrentAccount(Principal principal)
     {
         int userId = userDao.findByUsername(principal.getName()).getId();
         Account currentAccount = accountDao.getAccountById(userId);
-
         return currentAccount;
     }
 
@@ -48,7 +45,6 @@ public class AccountController
     public Account findAccountById(@PathVariable int id)
     {
         Account account = accountDao.getAccountById(id);
-
         return account;
     }
 
@@ -56,7 +52,6 @@ public class AccountController
     public BigDecimal accountBalance(Principal principal)
     {
         int userId = userDao.findByUsername(principal.getName()).getId();
-
         return accountDao.getAccountById(userId).getBalance();
     }
 }

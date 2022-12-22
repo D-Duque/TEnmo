@@ -69,7 +69,6 @@ public class JdbcAccountDao implements AccountDao
         }
     }
 
-    //TODO: update account balances
     @Override
     public void updateAccount(Account updatedAccount)
     {
@@ -87,7 +86,6 @@ public class JdbcAccountDao implements AccountDao
 
     private Account mapRowToAccount(SqlRowSet rs)
     {
-
         var accountId = rs.getInt("account_id");
         var userId = rs.getInt("user_id");
         var balance = rs.getBigDecimal("balance");
@@ -96,7 +94,6 @@ public class JdbcAccountDao implements AccountDao
             setUserId(userId);
             setBalance(balance);
         }};
-
         return account;
     }
 }

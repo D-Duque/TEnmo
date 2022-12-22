@@ -19,10 +19,13 @@ public class JdbcAccountDaoTests extends BaseDaoTests
 
     private JdbcAccountDao sut;
 
+    private Account testAccount;
+
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         sut = new JdbcAccountDao(jdbcTemplate);
+        testAccount = new Account(2004, 1004, new BigDecimal("1000.00"));
     }
 
     @Test
@@ -46,19 +49,31 @@ public class JdbcAccountDaoTests extends BaseDaoTests
     }
 
     @Test
-    public void getAccountByAccountId()
+    public void getAccountByAccountId_Should_Return_Correct_Account_For_AccountId_2001()
     {
         // arrange
         Account expected = ACCOUNT_1;
+        int accountId = 2001;
         // act
-        Account actual = sut.getAccountByAccountId(2001);
+        Account actual = sut.getAccountByAccountId(accountId);
         // assert
         Assert.assertEquals("Because get account by account id should retrieve the associated account.", expected.getAccountId(), actual.getAccountId());
         Assert.assertEquals(expected.getUserId(), actual.getUserId());
         Assert.assertEquals(expected.getBalance(), actual.getBalance());
     }
 
-
-
+    @Test
+    public void getAccountById_Should_Return_Correct_Account_For_UserId_1001() {
+        // arrange
+        int userId = 1001;
+        Account expect = ACCOUNT_1;
+        // act
+        Account actual = sut.getAccountById(userId);
+        // assert
+        String message = "Because get account by user id should retrieve the associated account.";
+        Assert.assertEquals(message, expect.getAccountId(), actual.getAccountId());
+        Assert.assertEquals(expect.getUserId(), actual.getUserId());
+        Assert.assertEquals(expect.getBalance(), actual.getBalance());
+    }
 
 }

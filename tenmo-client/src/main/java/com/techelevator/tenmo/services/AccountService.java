@@ -36,9 +36,6 @@ public class AccountService extends AuthenticationService<Account>
         }
     }
 
-
-
-
     public BigDecimal getAccountBalance()
     {
         try
@@ -62,5 +59,4 @@ public class AccountService extends AuthenticationService<Account>
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(account, headers);
     }
-
 }

@@ -27,8 +27,6 @@ public abstract class BasePage
         printCyanLine("*****************");
         printLine();
     }
-
-
     // prints
     public void print(String line)
     {
@@ -75,9 +73,7 @@ public abstract class BasePage
         System.out.print(ColorCodes.WHITE + line + ColorCodes.RESET);
     }
 
-
     // print lines
-
     public void printLine()
     {
         System.out.println();

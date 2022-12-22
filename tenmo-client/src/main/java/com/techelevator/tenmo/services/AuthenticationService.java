@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 public class AuthenticationService<T>
 {
-
     private final String baseUrl;
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -86,5 +85,4 @@ public class AuthenticationService<T>
         }
         return new HttpEntity<>(headers);
     }
-
 }

@@ -59,10 +59,5 @@ public class AuthenticationController
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
         }
     }
-
-
-    // TODO: create GetMapping for user by ID
-
-
 }
 
