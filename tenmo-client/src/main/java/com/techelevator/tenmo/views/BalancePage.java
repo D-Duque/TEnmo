@@ -8,5 +8,4 @@ public class BalancePage extends BasePage
     {
         printCyan("Your account balance is: " + balance);
     }
-
 }

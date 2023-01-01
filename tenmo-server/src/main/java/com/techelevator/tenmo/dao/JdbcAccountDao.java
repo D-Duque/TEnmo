@@ -69,7 +69,6 @@ public class JdbcAccountDao implements AccountDao
         }
     }
 
-    //TODO: update account balances
     @Override
     public void updateAccount(Account updatedAccount)
     {
@@ -95,7 +94,6 @@ public class JdbcAccountDao implements AccountDao
             setUserId(userId);
             setBalance(balance);
         }};
-
         return account;
     }
 }

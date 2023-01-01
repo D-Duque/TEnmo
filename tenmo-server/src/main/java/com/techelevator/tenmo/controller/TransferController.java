@@ -39,7 +39,6 @@ public class TransferController
     {
         // add transfer to transfer table
         transfer = addTransfer(transfer, ST_APPROVED, TP_SEND);
-
         updateBalances(transfer);
     }
 
@@ -51,13 +50,11 @@ public class TransferController
         BigDecimal oldFromBalance = fromAccount.getBalance();
         BigDecimal oldToBalance = toAccount.getBalance();
         BigDecimal updatedAmount = transfer.getAmount();
-
         // calculate new balances
         BigDecimal newFromBalance = oldFromBalance.subtract(updatedAmount);
         BigDecimal newToBalance = oldToBalance.add(updatedAmount);
         fromAccount.setBalance(newFromBalance);
         toAccount.setBalance(newToBalance);
-
         // update account database
         accountDao.updateAccount(fromAccount);
         accountDao.updateAccount(toAccount);
@@ -116,18 +113,10 @@ public class TransferController
 
     @PutMapping(value = "/request/{transferId}")
     public void updateRequest(@RequestBody Transfer transfer, @PathVariable int transferId) {
-
-//        Account fromAccount = accountDao.getAccountById(transfer.getAccountFrom());
-//        Account toAccount = accountDao.getAccountById(transfer.getAccountTo());
-//        transfer.setAccountFrom(fromAccount.getAccountId());
-//        transfer.setAccountTo(toAccount.getAccountId());
-
         if (transfer.getTransferStatusId() == ST_APPROVED) {
             //update balances & DAO
             updateBalances(transfer);
-
         }
         transferDao.updateTransfer(transfer);
     }
-
 }

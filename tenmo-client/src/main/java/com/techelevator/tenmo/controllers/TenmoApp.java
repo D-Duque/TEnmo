@@ -12,7 +12,6 @@ import java.util.List;
 
 public class TenmoApp
 {
-
     private static final String API_BASE_URL = "http://localhost:8080/";
 
     private final UserOutput userOutput = new UserOutput();
@@ -21,11 +20,8 @@ public class TenmoApp
     private final UserService userService = new UserService(API_BASE_URL);
     private final TransferService transferService = new TransferService(API_BASE_URL);
 
-    final int ST_PENDING = 1;
     final int ST_APPROVED = 2;
     final int ST_REJECT = 3;
-    final int TP_REQUEST = 1;
-    final int TP_SEND = 2;
 
     private AuthenticatedUser currentUser;
     private Account currentAccount;
@@ -131,10 +127,8 @@ public class TenmoApp
         }
     }
 
-
     private void viewCurrentBalance()
     {
-        // TODO Auto-generated method stub
         BigDecimal balance = accountService.getAccountBalance();
         // print balance
         BalancePage balancePage = new BalancePage();
@@ -143,7 +137,6 @@ public class TenmoApp
 
     private void viewTransferHistory()
     {
-        // TODO Auto-generated method stub
         List<Transfer> transfers = transferService.getTransferHistory();
         currentAccount = accountService.getAccount(currentUser.getUser().getId());
         HistoryPage historyPage = new HistoryPage();

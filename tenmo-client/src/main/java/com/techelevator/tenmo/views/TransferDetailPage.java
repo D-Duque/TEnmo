@@ -15,6 +15,6 @@ public class TransferDetailPage extends BasePage
         printCyan("Type: " + transfer.getTransferType() + "\n");
         printCyan("Status: " + transfer.getTransferStatus() + "\n");
         printCyan("Amount: $" + transfer.getAmount() + "\n");
-        }
     }
+}
 

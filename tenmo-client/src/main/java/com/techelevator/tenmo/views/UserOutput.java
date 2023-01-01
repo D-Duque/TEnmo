@@ -121,11 +121,8 @@ public class UserOutput
         System.out.println("\nPress Enter to continue...");
         scanner.nextLine();
     }
-
     public void printErrorMessage()
     {
         System.out.println("An error occurred. Check the log for details.");
     }
-
-
 }

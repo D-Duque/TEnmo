@@ -34,6 +34,24 @@ public class JdbcTransferDaoTests extends BaseDaoTests
         sut.addTransfer(TRANSFER_1);
         sut.addTransfer(TRANSFER_2);
     }
+    @Test
+    public void getTransferById_ShouldReturnTransferForSpecificId()
+    {
+        // arrange
+        Transfer expected = TRANSFER_1;
+        expected.setAccountFrom(2001);
+        expected.setAccountTo(2002);
+        // act
+        Transfer actual = sut.getTransferById(3001);
+        // assert
+        assertNotNull(actual);
+        assertEquals(expected.getTransferId(), actual.getTransferId());
+        assertEquals(expected.getTransferTypeId(), actual.getTransferTypeId());
+        assertEquals(expected.getTransferStatusId(), actual.getTransferStatusId());
+        assertEquals(expected.getAccountFrom(), actual.getAccountFrom());
+        assertEquals(expected.getAccountTo(), actual.getAccountTo());
+        assertEquals(expected.getAmount(), actual.getAmount());
+    }
 
     @Test
     public void addTransfer_CreatesATransferInTransferTable()
@@ -52,33 +70,9 @@ public class JdbcTransferDaoTests extends BaseDaoTests
     {
         // arrange
         int expectedListSize = 2;
-
         // act
         int actualListSize = sut.findAll(2001).size();
         // assert
         assertEquals("Because findAll should return a list of all transfers available to that account", expectedListSize, actualListSize);
-
-    }
-
-    @Test
-    public void getTransferById_ShouldReturnTransferForSpecificId()
-    {
-        // arrange
-        Transfer expected = TRANSFER_1;
-        expected.setAccountFrom(2001);
-        expected.setAccountTo(2002);
-
-
-        // act
-        Transfer actual = sut.getTransferById(3001);
-
-        // assert
-        assertNotNull(actual);
-        assertEquals(expected.getTransferId(), actual.getTransferId());
-        assertEquals(expected.getTransferTypeId(), actual.getTransferTypeId());
-        assertEquals(expected.getTransferStatusId(), actual.getTransferStatusId());
-        assertEquals(expected.getAccountFrom(), actual.getAccountFrom());
-        assertEquals(expected.getAccountTo(), actual.getAccountTo());
-        assertEquals(expected.getAmount(), actual.getAmount());
     }
 }

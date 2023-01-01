@@ -133,7 +133,6 @@ public class JdbcUserDao implements UserDao
         {
             return false;
         }
-
         return true;
     }
 
@@ -147,6 +146,4 @@ public class JdbcUserDao implements UserDao
         user.setAuthorities("USER");
         return user;
     }
-
-
 }

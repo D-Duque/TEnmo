@@ -85,5 +85,4 @@ public class AuthenticationService<T>
         }
         return new HttpEntity<>(headers);
     }
-
 }

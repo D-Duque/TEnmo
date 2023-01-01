@@ -1,13 +1,11 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,6 @@ import java.util.List;
 public class JdbcTransferDao implements TransferDao
 {
     private final JdbcTemplate jdbcTemplate;
-
 
     public JdbcTransferDao(JdbcTemplate jdbcTemplate)
     {
@@ -26,8 +23,6 @@ public class JdbcTransferDao implements TransferDao
     public List<Transfer> findAll(int accountId)
     {
         List<Transfer> transfers = new ArrayList<>();
-//        String sql = "SELECT * FROM transfer WHERE account_from = (SELECT account_id FROM account WHERE user_id = ?)    \n" +
-//                "OR account_to = (SELECT account_id FROM account WHERE user_id = ?);";
         String sql = "SELECT DISTINCT ON (transfer_id) transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount, a.account_id, a.user_id, username\n" +
                 "FROM transfer as t\n" +
                 "JOIN account as a\n" +
@@ -41,12 +36,10 @@ public class JdbcTransferDao implements TransferDao
         while (result.next())
         {
             Transfer transfer =  mapRowToTransfer(result);
-
             transfers.add(transfer);
         }
         return transfers;
     }
-
 
     @Override
     public Transfer getTransferById(int transferId)
@@ -63,6 +56,7 @@ public class JdbcTransferDao implements TransferDao
                 "JOIN transfer_status as ts\n" +
                 "ON t.transfer_status_id = ts.transfer_status_id\n" +
                 "WHERE transfer_id = ?;";
+
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
 
         if (result.next())
@@ -116,7 +110,6 @@ public class JdbcTransferDao implements TransferDao
         int accountFrom = transfer.getAccountFrom();
         int accountTo = transfer.getAccountTo();
         BigDecimal amount = transfer.getAmount();
-
 
         String sql = "UPDATE transfer SET transfer_id = ? " +
                 " , transfer_type_id = ? " +

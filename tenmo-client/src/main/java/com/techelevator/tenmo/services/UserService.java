@@ -6,8 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,5 +51,4 @@ public class UserService extends AuthenticationService<User>
         }
         return users;
     }
-
 }
