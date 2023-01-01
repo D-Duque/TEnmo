@@ -6,7 +6,6 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.*;
-import io.cucumber.core.backend.Pending;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +29,8 @@ public class TenmoApp
 
     private AuthenticatedUser currentUser;
     private Account currentAccount;
+
+    SendRequestPage sendRequestPage = new SendRequestPage();
 
     public void run()
     {
@@ -103,7 +104,7 @@ public class TenmoApp
             else if (menuSelection == 2)
             {
                 viewTransferHistory();
-
+                continue;
             }
             else if (menuSelection == 3)
             {
@@ -119,7 +120,7 @@ public class TenmoApp
             }
             else if (menuSelection == 0)
             {
-                continue;
+                System.exit(0);
             }
             else
             {
@@ -145,14 +146,30 @@ public class TenmoApp
         List<Transfer> transfers = transferService.getTransferHistory();
         currentAccount = accountService.getAccount(currentUser.getUser().getId());
         HistoryPage historyPage = new HistoryPage();
-        historyPage.displayTransferHistory(currentAccount, transfers, currentUser.getUser());
+
         // prompt user for transfer menu option
-        userOutput.printTransferMenu();
+
         int menuSelection = -1;
-        menuSelection = userOutput.promptForInt("Please choose an option: ");
-        if (menuSelection == 1) {
-            int transferId = userOutput.promptForInt("Enter transfer Id: ");
-            viewTransferById(transferId);
+
+        while (menuSelection != 0)
+        {
+            historyPage.displayTransferHistory(currentAccount, transfers, currentUser.getUser());
+            userOutput.printTransferMenu();
+            menuSelection = userOutput.promptForInt("Please choose an option: ");
+            if (menuSelection == 1)
+            {
+                int transferId = userOutput.promptForInt("Enter transfer Id: ");
+                viewTransferById(transferId);
+                userOutput.pause();
+            }
+            else if (menuSelection == 0)
+            {
+                mainMenu();
+            }
+            else
+            {
+                System.out.println("Not a valid selection.");
+            }
         }
     }
 
@@ -169,6 +186,7 @@ public class TenmoApp
         displayUserList();
         // Request ID & amount
         int selectedId = userOutput.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
+        if (selectedId == 0) {mainMenu();}
         BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
         boolean hasEnoughMoney = selectedAmount.compareTo(accountService.getAccountBalance()) <= 0;
         boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
@@ -193,7 +211,15 @@ public class TenmoApp
                 setAmount(selectedAmount);
             }};
 
-            transferService.updateBalances(newTransfer);
+            boolean wasSuccessful = transferService.updateBalances(newTransfer);
+            if (wasSuccessful)
+            {
+                sendRequestPage.displaySendSuccess(selectedAmount, selectedId);
+            }
+            else
+            {
+              sendRequestPage.displaySendFailure(selectedAmount, selectedId);
+            }
         }
     }
 
@@ -202,6 +228,7 @@ public class TenmoApp
         displayUserList();
         // Request ID & amount
         int selectedId = userOutput.promptForInt("Enter ID of user you are requesting bucks from (0 to cancel): ");
+        if (selectedId == 0) {mainMenu();}
         BigDecimal selectedAmount = userOutput.promptForBigDecimal("Enter amount: ");
 
         boolean isMoreThanZero = selectedAmount.compareTo(BigDecimal.ZERO) > 0;
@@ -220,13 +247,21 @@ public class TenmoApp
                 setAccountTo(currentUser.getUser().getId());
                 setAmount(selectedAmount);
             }};
-            transferService.createRequest(newTransfer);
+            boolean wasSuccessful = transferService.createRequest(newTransfer);
+
+            if (wasSuccessful)
+            {
+                sendRequestPage.displayRequestSuccess(selectedAmount, selectedId);
+            }
+            else
+            {
+                sendRequestPage.displayRequestFailure(selectedAmount, selectedId);
+            }
         }
     }
 
     private void displayUserList() {
         List<User> availableUsers = userService.getAllAvailableUsers();
-        SendRequestPage sendRequestPage = new SendRequestPage();
         sendRequestPage.displayAvailableUsers(availableUsers);
     }
 
