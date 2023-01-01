@@ -1,9 +1,6 @@
 package com.techelevator.tenmo.services;
 
-import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
-import com.techelevator.tenmo.models.User;
-import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;

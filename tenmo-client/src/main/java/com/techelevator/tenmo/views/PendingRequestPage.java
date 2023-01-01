@@ -38,4 +38,9 @@ public class PendingRequestPage extends BasePage
         printRedLine(" APPROVED.");
     }
 
+    public void displayFailure(String approvalRejection)
+    {
+        printRedLine(approvalRejection + " failed.");
+    }
+
 }

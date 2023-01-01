@@ -1,10 +1,6 @@
 package com.techelevator.tenmo.views;
 
-import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
-import com.techelevator.tenmo.models.User;
-
-import java.util.List;
 
 public class TransferDetailPage extends BasePage
 {

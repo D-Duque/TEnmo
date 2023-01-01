@@ -291,15 +291,17 @@ public class TenmoApp
 
             request.setTransferStatusId(ST_APPROVED);
             //to update DAO
-            transferService.updateRequest(request);
-            pendingRequestPage.displayRequestApproved(transferId);
+            boolean isSuccessful = transferService.updateRequest(request);
+            if (isSuccessful) {pendingRequestPage.displayRequestApproved(transferId);}
+            else {pendingRequestPage.displayFailure("Approval");}
         }
         else if (menuSelection == REJECT)
         {
             request.setTransferStatusId(ST_REJECT);
             //to update DAO
-            transferService.updateRequest(request);
-            pendingRequestPage.displayRequestRejected(transferId);
+            boolean isSuccessful = transferService.updateRequest(request);
+            if (isSuccessful) {pendingRequestPage.displayRequestRejected(transferId);}
+            else {pendingRequestPage.displayFailure("Rejection");}
         }
         else {
             mainMenu();
