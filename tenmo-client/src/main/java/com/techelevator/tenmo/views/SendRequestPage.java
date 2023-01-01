@@ -17,24 +17,28 @@ public class SendRequestPage extends BasePage
         }
     }
 
-    public void displaySendSuccess(BigDecimal amount, int id)
+    public void displaySendResult(Boolean isSuccessful, BigDecimal amount, int id)
     {
-        printGreenLine("\nYour transfer of " + amount + " TE bucks to user " + id + " was successful!");
+        if (isSuccessful)
+        {
+           printGreenLine("\nYour transfer of " + amount + " TE bucks to user " + id + " was successful!");
+        }
+        else
+        {
+            printRedLine("\nYour transfer of " + amount + " TE bucks to user " + id + " failed.");
+        }
     }
 
-    public void displaySendFailure(BigDecimal amount, int id)
+    public void displayRequestResult(Boolean isSuccessful, BigDecimal amount, int id)
     {
-        printRedLine("\nYour transfer of " + amount + " TE bucks to user " + id + " failed.");
-    }
-
-    public void displayRequestSuccess(BigDecimal amount, int id)
-    {
-        printGreenLine("\nYour request of " + amount + " TE bucks was sent to user " + id + " successfully!");
-    }
-
-    public void displayRequestFailure(BigDecimal amount, int id)
-    {
-        printRedLine("\nYour request of " + amount + " TE bucks to user " + id + " failed.");
+        if (isSuccessful)
+        {
+            printGreenLine("\nYour request of " + amount + " TE bucks was sent to user " + id + " successfully!");
+        }
+        else
+        {
+            printRedLine("\nYour request of " + amount + " TE bucks to user " + id + " failed.");
+        }
     }
 }
 

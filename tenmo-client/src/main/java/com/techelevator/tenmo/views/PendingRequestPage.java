@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PendingRequestPage extends BasePage
 {
-    public void displayPendingRequest(Account account, List<Transfer> transfers, User currentUser)
+    public void displayPendingRequest(List<Transfer> transfers, User currentUser)
     {
         printCyan("------------------------------------------------------------------------" + "\n");
         printCyan("Transfer ID" + "         " +  "Transfers To"  + "         " + "Amount($)" + "\n");
@@ -25,4 +25,17 @@ public class PendingRequestPage extends BasePage
         printCyanLine("1. Select Request");
         printCyanLine("0. Exit.");
     }
+
+    public void displayRequestApproved(int transferId)
+    {
+        printCyan("Request " + transferId);
+        printGreenLine(" APPROVED.");
+    }
+
+    public void displayRequestRejected(int transferId)
+    {
+        printCyan("Request " + transferId);
+        printRedLine(" APPROVED.");
+    }
+
 }

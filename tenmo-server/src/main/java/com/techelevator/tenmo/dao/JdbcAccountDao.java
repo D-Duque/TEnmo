@@ -87,7 +87,6 @@ public class JdbcAccountDao implements AccountDao
 
     private Account mapRowToAccount(SqlRowSet rs)
     {
-
         var accountId = rs.getInt("account_id");
         var userId = rs.getInt("user_id");
         var balance = rs.getBigDecimal("balance");

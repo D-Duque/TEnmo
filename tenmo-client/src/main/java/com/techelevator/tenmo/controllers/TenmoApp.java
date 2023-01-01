@@ -31,6 +31,7 @@ public class TenmoApp
     private Account currentAccount;
 
     SendRequestPage sendRequestPage = new SendRequestPage();
+    PendingRequestPage pendingRequestPage = new PendingRequestPage();
 
     public void run()
     {
@@ -135,7 +136,7 @@ public class TenmoApp
     {
         // TODO Auto-generated method stub
         BigDecimal balance = accountService.getAccountBalance();
-       // print balance
+        // print balance
         BalancePage balancePage = new BalancePage();
         balancePage.displayBalance(balance);
     }
@@ -148,7 +149,6 @@ public class TenmoApp
         HistoryPage historyPage = new HistoryPage();
 
         // prompt user for transfer menu option
-
         int menuSelection = -1;
 
         while (menuSelection != 0)
@@ -178,7 +178,6 @@ public class TenmoApp
         TransferDetailPage detailPage = new TransferDetailPage();
         detailPage.displayTransferDetail(transfer);
     }
-
 
     private void sendBucks()
     {
@@ -211,15 +210,8 @@ public class TenmoApp
                 setAmount(selectedAmount);
             }};
 
-            boolean wasSuccessful = transferService.updateBalances(newTransfer);
-            if (wasSuccessful)
-            {
-                sendRequestPage.displaySendSuccess(selectedAmount, selectedId);
-            }
-            else
-            {
-              sendRequestPage.displaySendFailure(selectedAmount, selectedId);
-            }
+            boolean isSuccessful = transferService.updateBalances(newTransfer);
+            sendRequestPage.displaySendResult(isSuccessful, selectedAmount, selectedId);
         }
     }
 
@@ -238,7 +230,8 @@ public class TenmoApp
         {
             System.out.println("You need to enter an amount greater than 0 to transfer.");
             requestBucks();
-        } else
+        }
+        else
         {
             // create transfer object
             Transfer newTransfer = new Transfer()
@@ -247,16 +240,8 @@ public class TenmoApp
                 setAccountTo(currentUser.getUser().getId());
                 setAmount(selectedAmount);
             }};
-            boolean wasSuccessful = transferService.createRequest(newTransfer);
-
-            if (wasSuccessful)
-            {
-                sendRequestPage.displayRequestSuccess(selectedAmount, selectedId);
-            }
-            else
-            {
-                sendRequestPage.displayRequestFailure(selectedAmount, selectedId);
-            }
+            boolean isSuccessful = transferService.createRequest(newTransfer);
+            sendRequestPage.displayRequestResult(isSuccessful, selectedAmount, selectedId);
         }
     }
 
@@ -270,37 +255,16 @@ public class TenmoApp
         final int VIEW_REQUEST = 1;
         final int EXIT_REQUEST = 0;
         List<Transfer> transfers = transferService.getTransferHistory();
+
         currentAccount = accountService.getAccount(currentUser.getUser().getId());
-        PendingRequestPage pendingRequestPage = new PendingRequestPage();
-        pendingRequestPage.displayPendingRequest(currentAccount, transfers, currentUser.getUser());
+        pendingRequestPage.displayPendingRequest(transfers, currentUser.getUser());
+
         int menuSelection = userOutput.promptForMenuSelection("Please choose an option: ");
 
         // Approve/Reject Transfer
         if (menuSelection == VIEW_REQUEST)
         {
-            final int APPROVE = 1;
-            final int REJECT = 2;
-            //retrieve the transfer object based on user choice of Id
-            int transferId = userOutput.promptForInt("Enter transfer Id: ");
-            Transfer request = transferService.getTransferDetail(transferId);
-            userOutput.printRequestMenu();
-            menuSelection = userOutput.promptForInt("Please choose an option: ");
-
-            //option1: to approve
-            if (menuSelection == APPROVE) {
-
-                request.setTransferStatusId(ST_APPROVED);
-                //to update DAO
-                transferService.updateRequest(request);
-
-            } else if (menuSelection == REJECT)
-            {
-                request.setTransferStatusId(ST_REJECT);
-                //to update DAO
-                transferService.updateRequest(request);
-            } else {
-                mainMenu();
-            }
+            approveRejectRequest();
         }
         else if (menuSelection == EXIT_REQUEST)
         {
@@ -310,11 +274,36 @@ public class TenmoApp
         {
             System.out.println("Not a valid menu option.");
         }
+    }
 
+    private void approveRejectRequest()
+    {
+        final int APPROVE = 1;
+        final int REJECT = 2;
+        //retrieve the transfer object based on user choice of Id
+        int transferId = userOutput.promptForInt("Enter transfer Id: ");
+        Transfer request = transferService.getTransferDetail(transferId);
+        userOutput.printRequestMenu();
+        int menuSelection = userOutput.promptForInt("Please choose an option: ");
 
+        //option1: to approve
+        if (menuSelection == APPROVE) {
 
-
-
+            request.setTransferStatusId(ST_APPROVED);
+            //to update DAO
+            transferService.updateRequest(request);
+            pendingRequestPage.displayRequestApproved(transferId);
+        }
+        else if (menuSelection == REJECT)
+        {
+            request.setTransferStatusId(ST_REJECT);
+            //to update DAO
+            transferService.updateRequest(request);
+            pendingRequestPage.displayRequestRejected(transferId);
+        }
+        else {
+            mainMenu();
+        }
     }
 }
 
